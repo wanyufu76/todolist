@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待辦事項清單</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #ACD6FF;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .todo-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        .header-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://img.zuomeme.com/uploads/1693569081758172966967.jpg" alt="Header Image" class="header-image" style="display: block; margin: auto;width: 500pt; height: auto;">
+        <h1 class="text-center mb-4">待辦事項清單</h1>
+        
+        <form action="/add" method="POST" class="mb-3">
+            <div class="input-group mb-2">
+                <input type="text" name="content" class="form-control" placeholder="輸入新的待辦事項" required>
+                <input type="hidden" name="user_id" value="1"> <!-- 假設使用者ID為1 -->
+            </div>
+            <div class="input-group mb-3">
+                <label for="due_date" class="mr-2">選擇執行或截止日期：</label>
+                <input type="date" name="due_date" class="form-control" id="due_date" required>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">新增</button>
+            </div>
+        </form>
+        
+        <ul class="list-group">
+            {% for todo in todos %}
+                <li class="list-group-item todo-item {% if todo.completed %}completed{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span>{{ todo.content }}</span><br>
+                            <small class="text-muted">執行或截止日期：{{ todo.due_date.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <div>
+                            <a href="/complete/{{ todo.id }}" class="btn btn-success btn-sm">{{ '未完成' if todo.completed else '完成' }}</a>
+                            <a href="/delete/{{ todo.id }}" class="btn btn-danger btn-sm">刪除</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <div class="text-center mt-4">
+            <a href="/logout" class="btn btn-secondary mx-2">登出</a>
+            <a href="/export" class="btn btn-success mx-2">匯出Excel</a>
+        </div>
+
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
